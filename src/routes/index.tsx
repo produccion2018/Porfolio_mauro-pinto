@@ -32,21 +32,23 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background">
+    <div className="min-h-screen overflow-x-hidden">
       <MatrixRain />
-      <Navbar />
-      <main>
-        <Hero />
-        <Services />
-        <Projects />
-        <DemoShowcase />
-        <Process />
-        <Technologies />
-        <CTA />
-        <About />
-        <Contact />
-      </main>
-      <Footer />
+      <div className="relative z-10">
+        <Navbar />
+        <main>
+          <Hero />
+          <Services />
+          <Projects />
+          <DemoShowcase />
+          <Process />
+          <Technologies />
+          <CTA />
+          <About />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }
