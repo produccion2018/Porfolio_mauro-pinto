@@ -37,8 +37,9 @@ export function MatrixRain() {
     setup();
 
     const draw = () => {
-      // trail fade over the site background (lower alpha = longer, slower trails)
-      ctx.fillStyle = "oklch(0.13 0.004 260 / 10%)";
+      // trail fade over a near-black backdrop (plain rgba, no oklch — avoids
+      // silent failures in embedded/older canvas implementations)
+      ctx.fillStyle = "rgba(10, 12, 15, 0.12)";
       ctx.fillRect(0, 0, width, height);
 
       ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
@@ -49,11 +50,11 @@ export function MatrixRain() {
         const y = drops[i] * fontSize;
 
         // leading character: brighter
-        ctx.fillStyle = "oklch(0.92 0.09 195 / 95%)";
+        ctx.fillStyle = "rgba(200, 250, 245, 0.95)";
         ctx.fillText(char, x, y);
 
         // trailing glow tint
-        ctx.fillStyle = "oklch(0.83 0.11 195 / 35%)";
+        ctx.fillStyle = "rgba(94, 234, 212, 0.35)";
         ctx.fillText(char, x, y - fontSize);
 
         if (y > height && Math.random() > 0.985) {
@@ -67,10 +68,10 @@ export function MatrixRain() {
 
     if (reduceMotion) {
       // static single faint frame, no animation loop
-      ctx.fillStyle = "oklch(0.13 0.004 260)";
+      ctx.fillStyle = "rgba(10, 12, 15, 1)";
       ctx.fillRect(0, 0, width, height);
       ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
-      ctx.fillStyle = "oklch(0.83 0.11 195 / 20%)";
+      ctx.fillStyle = "rgba(94, 234, 212, 0.2)";
       for (let i = 0; i < columns; i++) {
         const char = CHARS[Math.floor(Math.random() * CHARS.length)];
         ctx.fillText(char, i * fontSize, (drops[i] % height) * fontSize);
