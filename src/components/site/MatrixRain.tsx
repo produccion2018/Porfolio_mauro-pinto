@@ -16,7 +16,7 @@ export function MatrixRain() {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    const fontSize = 16;
+    const fontSize = 18;
     let columns = 0;
     let drops: number[] = [];
     let width = 0;
@@ -37,8 +37,8 @@ export function MatrixRain() {
     setup();
 
     const draw = () => {
-      // trail fade over the site background
-      ctx.fillStyle = "oklch(0.13 0.004 260 / 18%)";
+      // trail fade over the site background (lower alpha = longer, slower trails)
+      ctx.fillStyle = "oklch(0.13 0.004 260 / 10%)";
       ctx.fillRect(0, 0, width, height);
 
       ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
@@ -49,14 +49,14 @@ export function MatrixRain() {
         const y = drops[i] * fontSize;
 
         // leading character: brighter
-        ctx.fillStyle = "oklch(0.9 0.09 195 / 85%)";
+        ctx.fillStyle = "oklch(0.92 0.09 195 / 95%)";
         ctx.fillText(char, x, y);
 
         // trailing glow tint
-        ctx.fillStyle = "oklch(0.83 0.11 195 / 22%)";
+        ctx.fillStyle = "oklch(0.83 0.11 195 / 35%)";
         ctx.fillText(char, x, y - fontSize);
 
-        if (y > height && Math.random() > 0.975) {
+        if (y > height && Math.random() > 0.985) {
           drops[i] = 0;
         }
         drops[i]++;
@@ -70,15 +70,15 @@ export function MatrixRain() {
       ctx.fillStyle = "oklch(0.13 0.004 260)";
       ctx.fillRect(0, 0, width, height);
       ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
-      ctx.fillStyle = "oklch(0.83 0.11 195 / 14%)";
+      ctx.fillStyle = "oklch(0.83 0.11 195 / 20%)";
       for (let i = 0; i < columns; i++) {
         const char = CHARS[Math.floor(Math.random() * CHARS.length)];
         ctx.fillText(char, i * fontSize, (drops[i] % height) * fontSize);
       }
     } else {
       const loop = () => {
-        // ~20fps is plenty for this effect and keeps it light on CPU
-        if (frame % 2 === 0) draw();
+        // slow, deliberate fall — redraw every 4th frame (~15fps)
+        if (frame % 4 === 0) draw();
         frame++;
         rafId = window.requestAnimationFrame(loop);
       };
@@ -98,7 +98,7 @@ export function MatrixRain() {
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 opacity-[0.14]"
+      className="pointer-events-none fixed inset-0 -z-10 opacity-[0.28]"
     />
   );
 }
