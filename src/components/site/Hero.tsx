@@ -2,6 +2,66 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { MockDashboard, BrowserFrame } from "./MockDashboard";
 
+const DECODE_CHARS = "アイウエオカキクケコサシスセソタチツテト0123456789$#%&+=";
+
+function DecodeText({
+  text,
+  className,
+  delay = 0,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+}) {
+  const [output, setOutput] = useState(text);
+
+  useEffect(() => {
+    let rafId: number;
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let iteration = 0;
+
+    const tick = () => {
+      iteration += 1;
+      const locked = iteration / 3;
+
+      const next = text
+        .split("")
+        .map((char, i) => {
+          if (char === " ") return " ";
+          if (i < locked) return text[i];
+          return DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)];
+        })
+        .join("");
+
+      setOutput(next);
+
+      if (locked < text.length) {
+        timeoutId = setTimeout(() => {
+          rafId = requestAnimationFrame(tick);
+        }, 35);
+      } else {
+        setOutput(text);
+      }
+    };
+
+    const startTimeout = setTimeout(() => {
+      iteration = 0;
+      tick();
+    }, delay);
+
+    return () => {
+      clearTimeout(startTimeout);
+      clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId);
+    };
+  }, [text, delay]);
+
+  return <span className={className}>{output}</span>;
+}
+
+const ctaClass =
+  "group inline-flex items-center gap-2 rounded-lg border border-accent bg-transparent px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[0.15em] text-accent transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent hover:text-background hover:shadow-[0_0_20px_rgba(45,212,191,0.35)]";
+
 export function Hero() {
   const [mounted, setMounted] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -40,12 +100,12 @@ export function Hero() {
           </span>
 
           <h1 className="text-display mt-6 text-[2.6rem] sm:text-6xl lg:text-[4.25rem]">
-            Creo productos digitales que{" "}
+            <DecodeText text="Creo productos digitales que " delay={200} />
             <span className="relative inline-block">
-              hacen crecer
+              <DecodeText text="hacen crecer" delay={600} />
               <span className="absolute -bottom-1 left-0 h-px w-full origin-left bg-accent/70 [animation:line-grow_1.2s_cubic-bezier(0.16,1,0.3,1)_0.7s_both]" />
             </span>{" "}
-            tu negocio.
+            <DecodeText text="tu negocio." delay={1000} />
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -54,17 +114,11 @@ export function Hero() {
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
-            <a
-              href="#proyectos"
-              className="group inline-flex items-center gap-2 rounded-xl bg-foreground px-5 py-3 text-sm font-medium text-background transition-all duration-300 hover:-translate-y-0.5 hover:accent-ring"
-            >
+            <a href="#proyectos" className={ctaClass}>
               Ver mis proyectos
               <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
-            <a
-              href="#contacto"
-              className="inline-flex items-center gap-2 rounded-xl border border-border-strong px-5 py-3 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/60 hover:bg-surface"
-            >
+            <a href="#contacto" className={ctaClass}>
               Solicitar un proyecto
             </a>
           </div>
