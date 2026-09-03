@@ -59,14 +59,30 @@ export function Navbar() {
             <a
               key={l.href}
               href={l.href}
-              className="relative rounded-md px-3.5 py-2 text-sm text-muted-foreground transition-colors duration-300 hover:text-foreground"
+              className="group/link relative rounded-md px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors duration-300 hover:text-accent"
             >
-              {l.label}
+              <span
+                aria-hidden
+                className="absolute left-0.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover/link:translate-x-0 group-hover/link:opacity-100"
+              >
+                [
+              </span>
+              <span className="relative">{l.label}</span>
+              <span
+                aria-hidden
+                className="absolute right-0.5 translate-x-1 opacity-0 transition-all duration-300 group-hover/link:translate-x-0 group-hover/link:opacity-100"
+              >
+                ]
+              </span>
+              <span
+                aria-hidden
+                className="absolute inset-x-3 bottom-1 h-px origin-center scale-x-0 bg-accent shadow-[0_0_8px_1px_oklch(0.83_0.11_195_/_70%)] transition-transform duration-300 ease-out group-hover/link:scale-x-100"
+              />
             </a>
           ))}
           <a
             href="#contacto"
-            className="ml-3 inline-flex items-center rounded-lg border border-border-strong bg-foreground px-4 py-2 text-sm font-medium text-background transition-all duration-300 hover:-translate-y-0.5 hover:accent-ring"
+            className="ml-3 inline-flex items-center rounded-lg border border-accent/50 bg-transparent px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-accent transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent hover:text-accent-foreground hover:accent-ring"
           >
             Solicitar proyecto
           </a>
@@ -76,7 +92,7 @@ export function Navbar() {
           type="button"
           aria-label={open ? "Cerrar menú" : "Abrir menú"}
           onClick={() => setOpen((v) => !v)}
-          className="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-surface text-foreground transition-colors hover:border-border-strong lg:hidden"
+          className="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-surface text-foreground transition-colors hover:border-accent/60 hover:text-accent lg:hidden"
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
@@ -94,7 +110,7 @@ export function Navbar() {
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-3 text-base text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
+              className="rounded-lg px-3 py-3 font-mono text-sm uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:bg-surface hover:text-accent"
             >
               {l.label}
             </a>
@@ -102,7 +118,7 @@ export function Navbar() {
           <a
             href="#contacto"
             onClick={() => setOpen(false)}
-            className="mt-2 rounded-lg bg-foreground px-4 py-3 text-center text-sm font-medium text-background"
+            className="mt-2 rounded-lg border border-accent/50 px-4 py-3 text-center font-mono text-sm uppercase tracking-[0.1em] text-accent hover:bg-accent hover:text-accent-foreground"
           >
             Solicitar proyecto
           </a>
