@@ -1,5 +1,5 @@
 import { Reveal } from "./Reveal";
-import ProfilePhoto from "./ProfilePhoto";
+import ProfilePhoto from "../ProfilePhoto";
 import mauroPhoto from "@/assets/mauro-pinto.jpeg";
 import alejandroPhoto from "@/assets/alejandro-becerra.jpeg";
 
