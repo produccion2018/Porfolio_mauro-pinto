@@ -100,7 +100,7 @@ export function Hero() {
           </span>
 
           <h1 className="text-display mt-6 text-[2.6rem] sm:text-6xl lg:text-[4.25rem]">
-            <DecodeText text="Creo productos digitales que " delay={200} />
+            <DecodeText text="Creamos productos digitales que " delay={200} />
             <span className="relative inline-block">
               <DecodeText text="hacen crecer" delay={600} />
               <span className="absolute -bottom-1 left-0 h-px w-full origin-left bg-accent/70 [animation:line-grow_1.2s_cubic-bezier(0.16,1,0.3,1)_0.7s_both]" />
@@ -109,13 +109,13 @@ export function Hero() {
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Desarrollo sitios web, sistemas y plataformas SaaS modernas, escalables y diseñadas para
-            resolver problemas reales.
+            Desarrollamos sitios web, sistemas y plataformas SaaS modernas, escalables y diseñadas
+            para resolver problemas reales.
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
             <a href="#proyectos" className={ctaClass}>
-              Ver mis proyectos
+              Ver nuestros proyectos
               <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <a href="#contacto" className={ctaClass}>
