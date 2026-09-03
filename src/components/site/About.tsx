@@ -1,4 +1,5 @@
 import { Reveal } from "./Reveal";
+import ProfilePhoto from "./ProfilePhoto";
 import mauroPhoto from "@/assets/mauro-pinto.jpeg";
 import alejandroPhoto from "@/assets/alejandro-becerra.jpeg";
 
@@ -45,26 +46,16 @@ export function About() {
           >
             <Reveal className="min-w-0">
               <div className="relative w-full max-w-xs animate-float-slow">
-                {/* glow difuso detrás de la foto: funde el borde con el fondo */}
                 <div
                   aria-hidden
                   className="absolute -inset-6 -z-10 rounded-full bg-accent/15 blur-3xl"
                 />
-                <div
-                  className="relative aspect-[4/5] w-full"
-                  style={{
-                    maskImage:
-                      "radial-gradient(120% 120% at 50% 40%, black 62%, transparent 100%)",
-                    WebkitMaskImage:
-                      "radial-gradient(120% 120% at 50% 40%, black 62%, transparent 100%)",
-                  }}
-                >
-                  <img
+                <div className="relative aspect-[4/5] w-full">
+                  <ProfilePhoto
                     src={member.photo}
                     alt={member.name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-[1.04]"
+                    className="absolute inset-0 h-full w-full"
                   />
-                  {/* degradado inferior: la placa de texto "nace" de la propia foto, sin caja */}
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-background via-background/60 to-transparent" />
                 </div>
                 <div className="absolute inset-x-0 bottom-4 px-4 text-center">
