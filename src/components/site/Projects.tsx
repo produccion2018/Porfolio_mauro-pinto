@@ -108,10 +108,10 @@ export function Projects() {
               type="button"
               onClick={() => setFilter(c)}
               className={cn(
-                "rounded-full border px-4 py-2 text-xs font-medium transition-all duration-300",
+                "rounded-full border px-4 py-2 text-xs font-medium transition-all duration-300 font-mono",
                 filter === c
-                  ? "border-transparent bg-foreground text-background"
-                  : "border-border text-muted-foreground hover:border-border-strong hover:text-foreground",
+                  ? "border-[#00FF66] bg-[#00FF66] text-black shadow-[0_0_12px_rgba(0,255,102,0.4)]"
+                  : "border-[#00FF66]/30 text-zinc-400 hover:border-[#00FF66] hover:text-[#00FF66]",
               )}
             >
               {c}
@@ -124,11 +124,6 @@ export function Projects() {
             <ProjectCard key={p.id} project={p} index={i} onDemo={setActive} />
           ))}
         </div>
-
-        <p className="mt-8 font-mono text-[11px] text-muted-foreground">
-          * Proyectos de demostración (placeholders). Editá{" "}
-          <span className="text-accent">src/data/projects.ts</span> para cargar los reales.
-        </p>
       </div>
 
       <DemoModal project={active} onClose={() => setActive(null)} />
