@@ -26,14 +26,14 @@ export function Footer() {
   return (
     <footer className="border-t border-[#00FF66]/20 bg-black text-zinc-300">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div className="min-w-0">
+        <div className="grid gap-10 text-center sm:text-left md:grid-cols-2 lg:grid-cols-4">
+          <div className="flex min-w-0 flex-col items-center sm:items-start">
             <div className="flex min-w-0 items-center gap-2.5">
               <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#00FF66]/30 bg-black overflow-hidden">
-                <img 
-                  src={logoImg} 
-                  alt="Nodo Tech" 
-                  className="size-full object-cover" 
+                <img
+                  src={logoImg}
+                  alt="Nodo Tech"
+                  className="size-full object-cover"
                 />
               </span>
               <span className="truncate font-mono text-base font-bold text-[#00FF66] drop-shadow-[0_0_10px_rgba(0,255,102,0.5)]">
@@ -45,7 +45,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="min-w-0">
+          <div className="flex min-w-0 flex-col items-center sm:items-start">
             <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#00FF66]">
               Navegación
             </h3>
@@ -63,7 +63,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="min-w-0">
+          <div className="flex min-w-0 flex-col items-center sm:items-start">
             <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#00FF66]">
               Servicios
             </h3>
@@ -81,7 +81,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="min-w-0">
+          <div className="flex min-w-0 flex-col items-center sm:items-start">
             <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#00FF66]">
               Contacto
             </h3>
@@ -89,7 +89,7 @@ export function Footer() {
               nodotech.web@gmail.com
             </p>
             <p className="mt-1 text-sm text-zinc-400">Buenos Aires, Argentina</p>
-            <ul className="mt-4 flex flex-wrap gap-2">
+            <ul className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
               {socials.map((s) => (
                 <li key={s.label}>
                   <a
@@ -106,7 +106,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-[#00FF66]/20 pt-6">
+        <div className="mt-14 border-t border-[#00FF66]/20 pt-6 text-center sm:text-left">
           <p className="font-mono text-xs text-zinc-500">
             © 2026 Nodo Tech. Todos los derechos reservados.
           </p>
