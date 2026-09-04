@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Menu, X, Terminal } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { BRAND } from "@/data/brand";
+import logoImg from "@/assets/logo.png"; // Ajusta la ruta si es necesario (ej: "../../assets/logo.png")
 
 const links = [
   { label: "Inicio", href: "#inicio" },
@@ -35,8 +35,8 @@ export function Navbar() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
         scrolled
-          ? "border-b border-border bg-background/80 backdrop-blur-xl"
-          : "border-b border-transparent",
+          ? "border-b border-[#00FF66]/20 bg-black/90 backdrop-blur-xl"
+          : "border-b border-transparent bg-black/40 backdrop-blur-md",
       )}
     >
       <nav
@@ -46,11 +46,15 @@ export function Navbar() {
         )}
       >
         <a href="#inicio" className="group flex min-w-0 items-center gap-2.5">
-          <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-border-strong bg-surface-2 transition-colors duration-300 group-hover:border-accent/60">
-            <Terminal className="size-4 text-accent" strokeWidth={1.75} />
+          <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#00FF66]/30 bg-black overflow-hidden transition-colors duration-300 group-hover:border-[#00FF66]">
+            <img 
+              src={logoImg} 
+              alt="Nodo Tech" 
+              className="size-full object-cover" 
+            />
           </span>
-          <span className="truncate font-display text-sm font-semibold tracking-tight sm:text-base">
-            {BRAND.name}
+          <span className="truncate font-mono text-sm font-bold tracking-wider sm:text-base text-[#00FF66] drop-shadow-[0_0_12px_rgba(0,255,102,0.6)]">
+            Nodo Tech
           </span>
         </a>
 
@@ -59,30 +63,30 @@ export function Navbar() {
             <a
               key={l.href}
               href={l.href}
-              className="group/link relative rounded-md px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors duration-300 hover:text-accent"
+              className="group/link relative rounded-md px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] text-zinc-400 transition-colors duration-300 hover:text-[#00FF66]"
             >
               <span
                 aria-hidden
-                className="absolute left-0.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover/link:translate-x-0 group-hover/link:opacity-100"
+                className="absolute left-0.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover/link:translate-x-0 group-hover/link:opacity-100 text-[#00FF66]"
               >
                 [
               </span>
               <span className="relative">{l.label}</span>
               <span
                 aria-hidden
-                className="absolute right-0.5 translate-x-1 opacity-0 transition-all duration-300 group-hover/link:translate-x-0 group-hover/link:opacity-100"
+                className="absolute right-0.5 translate-x-1 opacity-0 transition-all duration-300 group-hover/link:translate-x-0 group-hover/link:opacity-100 text-[#00FF66]"
               >
                 ]
               </span>
               <span
                 aria-hidden
-                className="absolute inset-x-3 bottom-1 h-px origin-center scale-x-0 bg-accent shadow-[0_0_8px_1px_oklch(0.83_0.11_195_/_70%)] transition-transform duration-300 ease-out group-hover/link:scale-x-100"
+                className="absolute inset-x-3 bottom-1 h-px origin-center scale-x-0 bg-[#00FF66] shadow-[0_0_10px_2px_rgba(0,255,102,0.8)] transition-transform duration-300 ease-out group-hover/link:scale-x-100"
               />
             </a>
           ))}
           <a
             href="#contacto"
-            className="ml-3 inline-flex items-center rounded-lg border border-accent/50 bg-transparent px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-accent transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent hover:text-accent-foreground hover:accent-ring"
+            className="ml-3 inline-flex items-center rounded-lg border border-[#00FF66]/50 bg-black px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-[#00FF66] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#00FF66] hover:text-black hover:shadow-[0_0_15px_rgba(0,255,102,0.5)] font-bold"
           >
             Solicitar proyecto
           </a>
@@ -92,7 +96,7 @@ export function Navbar() {
           type="button"
           aria-label={open ? "Cerrar menú" : "Abrir menú"}
           onClick={() => setOpen((v) => !v)}
-          className="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-surface text-foreground transition-colors hover:border-accent/60 hover:text-accent lg:hidden"
+          className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#00FF66]/30 bg-black text-[#00FF66] transition-colors hover:border-[#00FF66] hover:shadow-[0_0_10px_rgba(0,255,102,0.4)] lg:hidden"
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
@@ -100,7 +104,7 @@ export function Navbar() {
 
       <div
         className={cn(
-          "overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl transition-[max-height,opacity] duration-500 lg:hidden",
+          "overflow-hidden border-t border-[#00FF66]/20 bg-black/95 backdrop-blur-xl transition-[max-height,opacity] duration-500 lg:hidden",
           open ? "max-h-[26rem] opacity-100" : "max-h-0 opacity-0",
         )}
       >
@@ -110,7 +114,7 @@ export function Navbar() {
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-3 font-mono text-sm uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:bg-surface hover:text-accent"
+              className="rounded-lg px-3 py-3 font-mono text-sm uppercase tracking-[0.1em] text-zinc-400 transition-colors hover:bg-black hover:text-[#00FF66]"
             >
               {l.label}
             </a>
@@ -118,7 +122,7 @@ export function Navbar() {
           <a
             href="#contacto"
             onClick={() => setOpen(false)}
-            className="mt-2 rounded-lg border border-accent/50 px-4 py-3 text-center font-mono text-sm uppercase tracking-[0.1em] text-accent hover:bg-accent hover:text-accent-foreground"
+            className="mt-2 rounded-lg border border-[#00FF66]/50 px-4 py-3 text-center font-mono text-sm uppercase tracking-[0.1em] text-[#00FF66] hover:bg-[#00FF66] hover:text-black font-bold"
           >
             Solicitar proyecto
           </a>
