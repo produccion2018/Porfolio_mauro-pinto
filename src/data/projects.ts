@@ -1,10 +1,3 @@
-/**
- * Fuente única de verdad del portfolio.
- * Para agregar un proyecto real: duplicá un objeto, cambiá los campos
- * y reemplazá `demoUrl` / `projectUrl` / `repoUrl` por tus URLs.
- * `image` acepta una ruta importada desde src/assets o una URL absoluta.
- */
-
 export type ProjectCategory = "SaaS" | "Web" | "E-commerce" | "Dashboards" | "Sistemas";
 
 export type Project = {
@@ -35,14 +28,20 @@ export const projectCategories = [
 
 export type FilterCategory = (typeof projectCategories)[number];
 
+/**
+ * Fuente única de verdad del portfolio.
+ * Para agregar un proyecto real: duplicá un objeto, cambiá los campos
+ * y reemplazá `demoUrl` / `projectUrl` / `repoUrl` por tus URLs.
+ * `image` acepta una ruta importada desde src/assets o una URL absoluta.
+ */
 export const projects: Project[] = [
   {
-    id: "saas-suite",
-    title: "Plataforma SaaS multiusuario",
+    id: "cloud-esther",
+    title: "Cloud Esther — Sistema para clínicas odontológicas",
     description:
-      "Demo placeholder: producto con planes, roles, facturación y módulos independientes por organización.",
+      "Sistema de gestión para consultorios: historia clínica, turnos, presupuestos y facturación por paciente, con panel de acciones rápidas para el equipo.",
     category: "SaaS",
-    technologies: ["React", "Vite", "Node.js", "Tailwind"],
+    technologies: ["React", "TanStack Router", "Radix UI", "Node.js"],
     demoUrl: null,
     projectUrl: null,
     repoUrl: null,
