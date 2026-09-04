@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { ArrowUpRight, Play } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Play } from "lucide-react";
 import {
   projects,
   projectCategories,
@@ -10,6 +10,7 @@ import { SectionHeading } from "./SectionHeading";
 import { Reveal } from "./Reveal";
 import { ProjectPreview } from "./ProjectPreview";
 import { DemoModal } from "./DemoModal";
+import { FILTER_PROJECTS_EVENT } from "./Services";
 import { cn } from "@/lib/utils";
 
 function ProjectCard({
@@ -59,20 +60,11 @@ function ProjectCard({
           <button
             type="button"
             onClick={() => onDemo(project)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-3.5 py-2 text-xs font-medium text-background transition-all duration-300 hover:-translate-y-0.5 hover:accent-ring"
+            className="inline-flex items-center gap-1.5 rounded-full border border-accent bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-accent transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent hover:text-background active:bg-accent active:text-background"
           >
             <Play className="size-3.5" strokeWidth={2} />
             Ver demo
           </button>
-          <a
-            href={project.projectUrl ?? "#contacto"}
-            target={project.projectUrl ? "_blank" : undefined}
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border-strong px-3.5 py-2 text-xs font-medium transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/60 hover:bg-surface-2"
-          >
-            Ver proyecto
-            <ArrowUpRight className="size-3.5" />
-          </a>
         </div>
       </div>
     </article>
@@ -82,6 +74,18 @@ function ProjectCard({
 export function Projects() {
   const [filter, setFilter] = useState<FilterCategory>("Todos");
   const [active, setActive] = useState<Project | null>(null);
+
+  // Escucha el evento disparado desde las cards de "Servicios" para
+  // aplicar el filtro correspondiente cuando el usuario llega desde ahí.
+  useEffect(() => {
+    const onFilterFromServices = (e: Event) => {
+      const category = (e as CustomEvent<FilterCategory>).detail;
+      if (category) setFilter(category);
+    };
+
+    window.addEventListener(FILTER_PROJECTS_EVENT, onFilterFromServices);
+    return () => window.removeEventListener(FILTER_PROJECTS_EVENT, onFilterFromServices);
+  }, []);
 
   const visible = useMemo(
     () => (filter === "Todos" ? projects : projects.filter((p) => p.category === filter)),

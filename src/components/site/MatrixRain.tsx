@@ -36,6 +36,16 @@ export function MatrixRain() {
 
     setup();
 
+    // Reinicia la caída de letras desde arriba y limpia el canvas,
+    // para que se vea la animación "arrancar de nuevo".
+    const restartRain = () => {
+      drops = Array.from({ length: columns }, () =>
+        Math.floor((Math.random() * height) / fontSize) * -1,
+      );
+      ctx.fillStyle = "rgba(10, 12, 15, 1)";
+      ctx.fillRect(0, 0, width, height);
+    };
+
     const draw = () => {
       // trail fade over a near-black backdrop (plain rgba, no oklch — avoids
       // silent failures in embedded/older canvas implementations)
@@ -89,8 +99,28 @@ export function MatrixRain() {
     const onResize = () => setup();
     window.addEventListener("resize", onResize);
 
+    // Observa la sección "inicio" (Hero) y reinicia la lluvia de letras
+    // cada vez que esa sección vuelve a estar visible en pantalla.
+    let wasIntersecting = true;
+    let observer: IntersectionObserver | undefined;
+    const inicioEl = document.getElementById("inicio");
+
+    if (inicioEl && !reduceMotion) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && !wasIntersecting) {
+            restartRain();
+          }
+          wasIntersecting = entry.isIntersecting;
+        },
+        { threshold: 0.3 },
+      );
+      observer.observe(inicioEl);
+    }
+
     return () => {
       window.removeEventListener("resize", onResize);
+      observer?.disconnect();
       if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, []);

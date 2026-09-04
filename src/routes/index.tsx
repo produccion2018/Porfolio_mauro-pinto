@@ -11,6 +11,7 @@ import { CTA } from "@/components/site/CTA";
 import { About } from "@/components/site/About";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 const title = "Product studio — Desarrollo de software y productos digitales";
 const description =
@@ -49,6 +50,7 @@ function Index() {
         </main>
         <Footer />
       </div>
+      <ScrollToTop />
     </div>
   );
 }

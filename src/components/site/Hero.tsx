@@ -8,10 +8,12 @@ function DecodeText({
   text,
   className,
   delay = 0,
+  replayKey,
 }: {
   text: string;
   className?: string;
   delay?: number;
+  replayKey: number;
 }) {
   const [output, setOutput] = useState(text);
 
@@ -54,7 +56,9 @@ function DecodeText({
       clearTimeout(timeoutId);
       cancelAnimationFrame(rafId);
     };
-  }, [text, delay]);
+    // replayKey fuerza que este efecto se vuelva a ejecutar cada vez
+    // que la sección "inicio" vuelve a estar en pantalla.
+  }, [text, delay, replayKey]);
 
   return <span className={className}>{output}</span>;
 }
@@ -65,9 +69,35 @@ const ctaClass =
 export function Hero() {
   const [mounted, setMounted] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [replayKey, setReplayKey] = useState(0);
   const zoneRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => setMounted(true), []);
+
+  // Cada vez que la sección "inicio" vuelve a estar visible en pantalla
+  // (por ejemplo, al hacer scroll hacia abajo y volver arriba), se
+  // incrementa replayKey para que el título vuelva a "decodificarse".
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let wasIntersecting = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !wasIntersecting) {
+          setReplayKey((k) => k + 1);
+        }
+        wasIntersecting = entry.isIntersecting;
+      },
+      { threshold: 0.5 },
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
 
   const onMove = (e: React.MouseEvent) => {
     const rect = zoneRef.current?.getBoundingClientRect();
@@ -78,7 +108,11 @@ export function Hero() {
   };
 
   return (
-    <section id="inicio" className="relative isolate overflow-hidden pt-28 sm:pt-32">
+    <section
+      id="inicio"
+      ref={sectionRef}
+      className="relative isolate overflow-hidden pt-28 sm:pt-32"
+    >
       <div className="grid-backdrop pointer-events-none absolute inset-0 -z-10 opacity-80" />
       <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-accent/10 blur-[140px]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background to-transparent" />
@@ -100,12 +134,12 @@ export function Hero() {
           </span>
 
           <h1 className="text-display mt-6 text-[2.6rem] sm:text-6xl lg:text-[4.25rem]">
-            <DecodeText text="Creamos productos digitales que " delay={200} />
+            <DecodeText text="Creamos productos digitales que " delay={200} replayKey={replayKey} />
             <span className="relative inline-block">
-              <DecodeText text="hacen crecer" delay={600} />
+              <DecodeText text="hacen crecer" delay={600} replayKey={replayKey} />
               <span className="absolute -bottom-1 left-0 h-px w-full origin-left bg-accent/70 [animation:line-grow_1.2s_cubic-bezier(0.16,1,0.3,1)_0.7s_both]" />
             </span>{" "}
-            <DecodeText text="tu negocio." delay={1000} />
+            <DecodeText text="tu negocio." delay={1000} replayKey={replayKey} />
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
