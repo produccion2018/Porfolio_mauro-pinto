@@ -1,7 +1,31 @@
 import { useEffect } from "react";
 import { X, ExternalLink, Github, MonitorPlay } from "lucide-react";
 import type { Project } from "@/data/projects";
-import { MockDashboard } from "./MockDashboard";
+import {
+  MockDashboard,
+  MockWebsite,
+  MockEcommerce,
+  MockSystemLogin,
+  MockAnalytics,
+} from "./MockDashboard";
+
+/** Elige el mockup correcto según la categoría del proyecto. */
+function ProjectMock({ project }: { project: Project }) {
+  switch (project.category) {
+    case "SaaS":
+      return <MockDashboard />;
+    case "Web":
+      return <MockWebsite />;
+    case "E-commerce":
+      return <MockEcommerce />;
+    case "Sistemas":
+      return <MockSystemLogin />;
+    case "Dashboards":
+      return <MockAnalytics />;
+    default:
+      return <MockDashboard />;
+  }
+}
 
 export function DemoModal({ project, onClose }: { project: Project | null; onClose: () => void }) {
   useEffect(() => {
@@ -61,7 +85,7 @@ export function DemoModal({ project, onClose }: { project: Project | null; onClo
             />
           ) : (
             <div className="relative">
-              <MockDashboard />
+              <ProjectMock project={project} />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-4">
                 <span className="rounded-full border border-border bg-surface/90 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground backdrop-blur">
                   demo placeholder · conectá tu URL en src/data/projects.ts
@@ -94,7 +118,7 @@ export function DemoModal({ project, onClose }: { project: Project | null; onClo
               href={project.demoUrl ?? project.projectUrl ?? "#proyectos"}
               target={project.demoUrl || project.projectUrl ? "_blank" : undefined}
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3.5 py-2 text-xs font-medium text-background transition-transform duration-300 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-lg border border-accent bg-accent px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-background transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(0,255,102,0.5)]"
             >
               <MonitorPlay className="size-3.5" />
               Abrir en pestaña
