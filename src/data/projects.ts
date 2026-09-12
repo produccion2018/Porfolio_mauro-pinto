@@ -1,4 +1,4 @@
-eexport type ProjectCategory = "SaaS" | "Web" | "E-commerce" | "Dashboards" | "Sistemas";
+export type ProjectCategory = "SaaS" | "Web" | "E-commerce" | "Dashboards" | "Sistemas";
 
 export type Project = {
   id: string;
