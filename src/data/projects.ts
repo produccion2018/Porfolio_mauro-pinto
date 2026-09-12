@@ -1,4 +1,4 @@
-export type ProjectCategory = "SaaS" | "Web" | "E-commerce" | "Dashboards" | "Sistemas";
+eexport type ProjectCategory = "SaaS" | "Web" | "E-commerce" | "Dashboards" | "Sistemas";
 
 export type Project = {
   id: string;
@@ -49,16 +49,16 @@ export const projects: Project[] = [
     hue: 195,
   },
   {
-    id: "panel-operativo",
-    title: "Panel operativo interno",
+    id: "agenda-personal",
+    title: "Agenda Personal",
     description:
-      "Demo placeholder: sistema de gestión con inventario, órdenes, permisos y reportes en tiempo real.",
+      "App para organizar tu vida diaria: tareas, hábitos, calendario, recordatorios y notas rápidas en un solo panel, con modo oscuro/claro y color de sidebar personalizable.",
     category: "Sistemas",
-    technologies: ["React", "Python", "PostgreSQL"],
-    demoUrl: null,
-    projectUrl: null,
+    technologies: ["React", "TypeScript", "Tailwind"],
+    demoUrl: "https://agenda-demo-hazel.vercel.app",
+    projectUrl: "https://agenda-demo-hazel.vercel.app",
     repoUrl: null,
-    placeholder: true,
+    placeholder: false,
     hue: 260,
   },
   {
