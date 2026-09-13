@@ -15,9 +15,9 @@ const projectTypes = [
 
 const budgets = [
   "A definir / Según alcance",
-  "USD 1.500 – 3.500",
-  "USD 3.500 – 7.000",
-  "USD 7.000 – 15.000",
+  "USD 1.500 – 3.500 (aprox. $2.300.000 – $5.400.000)",
+  "USD 3.500 – 7.000 (aprox. $5.400.000 – $10.800.000)",
+  "USD 7.000 – 15.000 (aprox. $10.800.000 – $23.200.000)",
   "Más de USD 15.000 (Enterprise)",
 ];
 
