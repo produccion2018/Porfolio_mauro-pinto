@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { Play } from "lucide-react";
 import {
   projects,
@@ -22,27 +22,64 @@ function ProjectCard({
   index: number;
   onDemo: (p: Project) => void;
 }) {
+  const onMove = (e: MouseEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+  };
+
   return (
     <article
-      style={{ animationDelay: `${index * 60}ms` }}
-      className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-500 animate-in fade-in slide-in-from-bottom-3 hover:-translate-y-1.5 hover:border-border-strong"
+      onMouseMove={onMove}
+      style={{ animationDelay: `${index * 70}ms` }}
+      className="pf-card group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-500 animate-in fade-in slide-in-from-bottom-3 hover:-translate-y-2 hover:border-[#00FF66]/50 hover:shadow-[0_30px_60px_-30px_rgba(0,255,102,0.45)]"
     >
-      <div className="relative overflow-hidden border-b border-border">
-        <div className="transition-transform duration-700 group-hover:scale-[1.04]">
+      {/* Barra tipo navegador */}
+      <div className="flex items-center gap-2 border-b border-border bg-surface-2 px-3 py-2">
+        <span className="size-2 rounded-full bg-[#ff5f57]/80" />
+        <span className="size-2 rounded-full bg-[#febc2e]/80" />
+        <span className="size-2 rounded-full bg-[#28c840]/80" />
+        <span className="ml-2 truncate rounded-md bg-background/70 px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+          {project.demoUrl ? project.demoUrl.replace(/^https?:\/\//, "").replace(/\/$/, "") : `${project.id}.demo`}
+        </span>
+      </div>
+
+      <div className="relative overflow-hidden">
+        <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]">
           <ProjectPreview project={project} />
         </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
+        <button
+          type="button"
+          onClick={() => onDemo(project)}
+          aria-label={`Ver demo de ${project.title}`}
+          className="absolute inset-0 grid place-items-center bg-background/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-100"
+        >
+          <span className="grid size-16 scale-75 place-items-center rounded-full bg-[#00FF66] text-black shadow-[0_0_40px_rgba(0,255,102,0.6)] transition-transform duration-500 group-hover:scale-100">
+            <Play className="ml-1 size-6 fill-current" />
+          </span>
+        </button>
         <span className="absolute left-3 top-3 rounded-full border border-border bg-background/80 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground backdrop-blur">
           {project.category}
         </span>
-        {project.placeholder && (
+        {project.placeholder ? (
           <span className="absolute right-3 top-3 rounded-full border border-accent/40 bg-background/80 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-accent backdrop-blur">
-            demo
+            próximamente
+          </span>
+        ) : (
+          <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-[#00FF66]/40 bg-background/80 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-[#00FF66] backdrop-blur">
+            <span className="size-1.5 animate-pulse rounded-full bg-[#00FF66]" /> online
           </span>
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col p-5">
-        <h3 className="font-display text-lg font-semibold leading-snug">{project.title}</h3>
+      <div className="relative flex min-w-0 flex-1 flex-col p-5">
+        <span className="pointer-events-none absolute right-4 top-2 font-mono text-5xl font-bold text-foreground/[0.04] transition-colors duration-500 group-hover:text-[#00FF66]/10">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <h3 className="pr-14 font-display text-lg font-semibold leading-snug transition-colors group-hover:text-[#00FF66]">
+          {project.title}
+        </h3>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
 
         <ul className="mt-4 flex flex-wrap gap-1.5">
@@ -56,7 +93,7 @@ function ProjectCard({
           ))}
         </ul>
 
-        <div className="mt-6 flex flex-wrap gap-2 pt-1">
+        <div className="mt-auto flex flex-wrap gap-2 pt-6">
           <button
             type="button"
             onClick={() => onDemo(project)}

@@ -1,3 +1,8 @@
+import demoAgenda from "@/assets/demo-agenda.webp";
+import demoDataflow from "@/assets/demo-dataflow.webp";
+import demoPostres from "@/assets/demo-postres.webp";
+import demoSmartmarket from "@/assets/demo-smartmarket.webp";
+
 export type ProjectCategory = "SaaS" | "Web" | "E-commerce" | "Dashboards" | "Sistemas";
 
 export type Project = {
@@ -50,6 +55,7 @@ export const projects: Project[] = [
   },
   {
     id: "agenda-personal",
+    image: demoAgenda,
     title: "Agenda Personal",
     description:
       "App para organizar tu vida diaria: tareas, hábitos, calendario, recordatorios y notas rápidas en un solo panel, con modo oscuro/claro y color de sidebar personalizable.",
@@ -63,6 +69,7 @@ export const projects: Project[] = [
   },
   {
     id: "dataflow",
+    image: demoDataflow,
     title: "DataFlow — Panel Ejecutivo",
     description:
       "Dashboard ejecutivo con métricas en tiempo real: ingresos, usuarios activos, órdenes y tasa de conversión, con gráficos de ventas y distribución por categoría.",
@@ -76,6 +83,7 @@ export const projects: Project[] = [
   },
   {
     id: "postres-mireya",
+    image: demoPostres,
     title: "Postres Mireya",
     description:
       "Sitio de repostería artesanal por encargo: menú, galería de productos, carrito de compra y pedidos en línea.",
@@ -89,6 +97,7 @@ export const projects: Project[] = [
   },
   {
     id: "smartmarket",
+    image: demoSmartmarket,
     title: "SmartMarket — Sistema de punto de venta",
     description:
       "POS para comercios: caja con escaneo de códigos de barra, control de inventario y stock por categoría, descuentos y múltiples formas de pago.",

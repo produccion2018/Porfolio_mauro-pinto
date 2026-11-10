@@ -223,3 +223,29 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ───────────── Portfolio · diseño premium ───────────── */
+.pf-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(0, 255, 102, 0.1), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.pf-card:hover::after {
+  opacity: 1;
+}
+.pf-load {
+  animation: pf-load 1.2s ease-in-out infinite;
+}
+@keyframes pf-load {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}

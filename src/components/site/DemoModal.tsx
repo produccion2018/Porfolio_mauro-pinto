@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { X, ExternalLink, Github, MonitorPlay } from "lucide-react";
 import type { Project } from "@/data/projects";
 import {
@@ -39,6 +39,9 @@ export function DemoModal({ project, onClose }: { project: Project | null; onClo
     };
   }, [project, onClose]);
 
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => setLoaded(false), [project]);
+
   if (!project) return null;
 
   return (
@@ -77,18 +80,40 @@ export function DemoModal({ project, onClose }: { project: Project | null; onClo
 
         <div className="min-h-0 flex-1 overflow-auto bg-background">
           {project.demoUrl ? (
-            <iframe
-              src={project.demoUrl}
-              title={`Demo de ${project.title}`}
-              className="h-[70vh] w-full border-0"
-              loading="lazy"
-            />
+            <div className="relative h-[70vh] w-full">
+              <iframe
+                src={project.demoUrl}
+                title={`Demo de ${project.title}`}
+                className={`h-full w-full border-0 transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+                onLoad={() => setLoaded(true)}
+              />
+              <div
+                className={`absolute inset-0 grid place-items-center bg-background transition-opacity duration-700 ${
+                  loaded ? "pointer-events-none opacity-0" : "opacity-100"
+                }`}
+              >
+                <div className="flex flex-col items-center gap-5">
+                  <div className="relative size-16">
+                    <span className="absolute inset-0 animate-spin rounded-full border-2 border-[#00FF66]/20 border-t-[#00FF66]" />
+                    <span className="absolute inset-2 animate-spin rounded-full border-2 border-[#00FF66]/10 border-b-[#00FF66]/70 [animation-direction:reverse] [animation-duration:1.4s]" />
+                    <MonitorPlay className="absolute inset-0 m-auto size-5 text-[#00FF66]" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-mono text-xs uppercase tracking-[0.3em] text-[#00FF66]">Cargando demo</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{project.title}</p>
+                  </div>
+                  <div className="h-0.5 w-48 overflow-hidden rounded-full bg-border">
+                    <span className="pf-load block h-full w-1/3 rounded-full bg-[#00FF66] shadow-[0_0_10px_#00FF66]" />
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="relative">
               <ProjectMock project={project} />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-4">
                 <span className="rounded-full border border-border bg-surface/90 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground backdrop-blur">
-                  demo placeholder · conectá tu URL en src/data/projects.ts
+                  vista previa · demo en vivo próximamente
                 </span>
               </div>
             </div>
