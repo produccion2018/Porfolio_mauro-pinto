@@ -12,6 +12,7 @@ import { About } from "@/components/site/About";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { MusicPlayer } from "@/components/site/MusicPlayer";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -37,6 +38,7 @@ function Index() {
         <Footer />
       </div>
       <ScrollToTop />
+      <MusicPlayer />
     </div>
   );
 }

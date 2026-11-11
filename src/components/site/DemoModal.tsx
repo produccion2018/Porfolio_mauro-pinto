@@ -27,6 +27,13 @@ function ProjectMock({ project }: { project: Project }) {
   }
 }
 
+/** Abre el demo en "modo recorrido" (se navega solo). Cloud Esther se abre normal. */
+const NO_TOUR = new Set(["cloud-esther"]);
+function withTour(id: string, url: string) {
+  if (NO_TOUR.has(id)) return url;
+  return url + (url.includes("?") ? "&" : "?") + "tour=1";
+}
+
 export function DemoModal({ project, onClose }: { project: Project | null; onClose: () => void }) {
   useEffect(() => {
     if (!project) return;
@@ -82,7 +89,7 @@ export function DemoModal({ project, onClose }: { project: Project | null; onClo
           {project.demoUrl ? (
             <div className="relative h-[70vh] w-full">
               <iframe
-                src={project.demoUrl}
+                src={withTour(project.id, project.demoUrl)}
                 title={`Demo de ${project.title}`}
                 className={`h-full w-full border-0 transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
                 onLoad={() => setLoaded(true)}
@@ -99,7 +106,9 @@ export function DemoModal({ project, onClose }: { project: Project | null; onClo
                     <MonitorPlay className="absolute inset-0 m-auto size-5 text-[#00FF66]" />
                   </div>
                   <div className="text-center">
-                    <p className="font-mono text-xs uppercase tracking-[0.3em] text-[#00FF66]">Cargando demo</p>
+                    <p className="font-mono text-xs uppercase tracking-[0.3em] text-[#00FF66]">
+                      Cargando demo
+                    </p>
                     <p className="mt-1 text-sm text-muted-foreground">{project.title}</p>
                   </div>
                   <div className="h-0.5 w-48 overflow-hidden rounded-full bg-border">

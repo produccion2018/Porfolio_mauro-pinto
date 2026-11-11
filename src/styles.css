@@ -249,3 +249,18 @@
     transform: translateX(300%);
   }
 }
+.pf-eq {
+  height: 4px;
+  animation: pf-eq 0.9s ease-in-out infinite alternate;
+}
+@keyframes pf-eq {
+  0% {
+    height: 4px;
+  }
+  50% {
+    height: 14px;
+  }
+  100% {
+    height: 7px;
+  }
+}
