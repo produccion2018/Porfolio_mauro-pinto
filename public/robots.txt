@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://porfolio-mauro-pinto.vercel.app/sitemap.xml

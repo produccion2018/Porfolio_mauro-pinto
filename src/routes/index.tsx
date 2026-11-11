@@ -13,21 +13,7 @@ import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
-const title = "Product studio — Desarrollo de software y productos digitales";
-const description =
-  "Desarrollo sitios web, e-commerce, sistemas de gestión, dashboards y plataformas SaaS modernas, escalables y listas para usuarios reales.";
-
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
   component: Index,
 });
 
