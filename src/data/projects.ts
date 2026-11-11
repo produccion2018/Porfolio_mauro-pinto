@@ -1,6 +1,7 @@
 import demoAgenda from "@/assets/demo-agenda.webp";
 import demoCloudEsther from "@/assets/demo-cloud-esther.webp";
 import demoDataflow from "@/assets/demo-dataflow.webp";
+import demoFlujo from "@/assets/demo-flujo.webp";
 import demoPostres from "@/assets/demo-postres.webp";
 import demoSmartmarket from "@/assets/demo-smartmarket.webp";
 
@@ -112,16 +113,17 @@ export const projects: Project[] = [
     hue: 145,
   },
   {
-    id: "automatizacion-flows",
-    title: "Motor de automatizaciones",
+    id: "flujo-tablero",
+    image: demoFlujo,
+    title: "Flujo — Tablero de proyectos",
     description:
-      "Demo placeholder: flujos automáticos entre herramientas, disparadores y registro de ejecuciones.",
+      "Tablero Kanban para equipos: arrastrar y soltar tareas, prioridades, fechas límite, filtros por persona, métricas en tiempo real y modo claro/oscuro.",
     category: "Sistemas",
-    technologies: ["Node.js", "Python", "Webhooks"],
-    demoUrl: null,
-    projectUrl: null,
+    technologies: ["React", "TypeScript", "TanStack Start", "Tailwind"],
+    demoUrl: "https://flujo-tablero-de-proyectos.vercel.app",
+    projectUrl: "https://flujo-tablero-de-proyectos.vercel.app",
     repoUrl: null,
-    placeholder: true,
+    placeholder: false,
     hue: 320,
   },
 ];
