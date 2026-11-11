@@ -34,6 +34,12 @@ const budgets = [
      CONTACT_FROM_EMAIL → remitente (opcional, ej. "Nodo Tech <hola@tudominio.com>")
    ===================================================== */
 
+/** Límites del formulario (los mismos se aplican en la pantalla y en el servidor). */
+const MAX = { nombre: 80, email: 120, empresa: 100, mensaje: 2000 } as const;
+/** Anti-spam: máximo de consultas por email por hora, y total por hora para todo el sitio. */
+const LIMIT_PER_EMAIL_HOUR = 3;
+const LIMIT_TOTAL_HOUR = 30;
+
 type ContactInput = {
   nombre: string;
   email: string;
@@ -44,25 +50,40 @@ type ContactInput = {
   website: string; // honeypot anti-bots: debe llegar vacío
 };
 
-const clean = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+const clean = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+// Quita saltos de línea de campos de una sola línea (evita que alteren el asunto del email).
+const oneLine = (v: string) => v.replace(/[\r\n\t]+/g, " ");
 
 const escapeHtml = (v: string) =>
-  v.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+  v.replace(
+    /[&<>"']/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
+  );
+
+class LimitError extends Error {}
 
 const sendContact = createServerFn({ method: "POST" })
   .inputValidator((raw: ContactInput): ContactInput => {
     const data = {
-      nombre: clean(raw?.nombre, 120),
-      email: clean(raw?.email, 200),
-      empresa: clean(raw?.empresa, 160),
-      tipo: clean(raw?.tipo, 80),
-      presupuesto: clean(raw?.presupuesto, 120),
-      mensaje: clean(raw?.mensaje, 5000),
-      website: clean(raw?.website, 200),
+      nombre: oneLine(clean(raw?.nombre)),
+      email: oneLine(clean(raw?.email)).toLowerCase(),
+      empresa: oneLine(clean(raw?.empresa)),
+      tipo: clean(raw?.tipo),
+      presupuesto: clean(raw?.presupuesto),
+      mensaje: clean(raw?.mensaje),
+      website: clean(raw?.website),
     };
-    if (data.nombre.length < 2) throw new Error("Ingresá tu nombre.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) throw new Error("Ingresá un email válido.");
+    if (data.nombre.length < 2 || data.nombre.length > MAX.nombre)
+      throw new Error("Revisá tu nombre.");
+    if (data.email.length > MAX.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
+      throw new Error("Ingresá un email válido.");
+    if (data.empresa.length > MAX.empresa) throw new Error("El nombre de la empresa es muy largo.");
     if (data.mensaje.length < 10) throw new Error("Contanos un poco más en el mensaje.");
+    if (data.mensaje.length > MAX.mensaje)
+      throw new Error(`El mensaje puede tener hasta ${MAX.mensaje} caracteres.`);
+    // Solo se aceptan las opciones de los desplegables
+    if (!projectTypes.includes(data.tipo)) data.tipo = projectTypes[0]!;
+    if (!budgets.includes(data.presupuesto)) data.presupuesto = budgets[0]!;
     return data;
   })
   .handler(async ({ data }) => {
@@ -88,10 +109,22 @@ const sendContact = createServerFn({ method: "POST" })
           mensaje TEXT NOT NULL,
           created_at TIMESTAMPTZ NOT NULL DEFAULT now()
         )`;
+        // Anti-spam: limita consultas repetidas y ráfagas
+        const rows = (await sql`SELECT
+            count(*) FILTER (WHERE email = ${data.email})::int AS "porEmail",
+            count(*)::int AS total
+          FROM contact_requests
+          WHERE created_at > now() - interval '1 hour'`) as { porEmail: number; total: number }[];
+        const porEmail = rows[0]?.porEmail ?? 0;
+        const total = rows[0]?.total ?? 0;
+        if (porEmail >= LIMIT_PER_EMAIL_HOUR || total >= LIMIT_TOTAL_HOUR) {
+          throw new LimitError("Ya recibimos tus consultas. Te respondemos a la brevedad 🙌");
+        }
         await sql`INSERT INTO contact_requests (nombre, email, empresa, tipo, presupuesto, mensaje)
           VALUES (${data.nombre}, ${data.email}, ${data.empresa}, ${data.tipo}, ${data.presupuesto}, ${data.mensaje})`;
         saved = true;
       } catch (err) {
+        if (err instanceof LimitError) throw err;
         console.error("[contacto] Error guardando en Neon:", err);
       }
     }
@@ -124,7 +157,10 @@ const sendContact = createServerFn({ method: "POST" })
       try {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
-          headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             from: CONTACT_FROM_EMAIL || "Nodo Tech <onboarding@resend.dev>",
             to: CONTACT_TO_EMAIL.split(",").map((e) => e.trim()),
@@ -149,7 +185,8 @@ const sendContact = createServerFn({ method: "POST" })
 const fieldClass =
   "w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors duration-300 placeholder:text-muted-foreground focus:border-[#00FF66]/60 focus:ring-2 focus:ring-[#00FF66]/20";
 
-const labelClass = "mb-2 block font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground";
+const labelClass =
+  "mb-2 block font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground";
 
 export function Contact() {
   const [sent, setSent] = useState(false);
@@ -158,6 +195,7 @@ export function Contact() {
   const [mathError, setMathError] = useState(false);
   const [sending, setSending] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [msgLen, setMsgLen] = useState(0);
 
   // Genera un reto de multiplicación aleatorio (tablas del 2 al 9) al cargar
   useEffect(() => {
@@ -202,12 +240,15 @@ export function Contact() {
         },
       });
       form.reset();
+      setMsgLen(0);
       setUserAnswer("");
       newChallenge();
       setSent(true);
       setTimeout(() => setSent(false), 6000);
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : "No pudimos enviar tu consulta. Probá de nuevo.");
+      setServerError(
+        err instanceof Error ? err.message : "No pudimos enviar tu consulta. Probá de nuevo.",
+      );
     } finally {
       setSending(false);
     }
@@ -239,7 +280,14 @@ export function Contact() {
                   <label className={labelClass} htmlFor="nombre">
                     Nombre
                   </label>
-                  <input id="nombre" name="nombre" required placeholder="Tu nombre" className={fieldClass} />
+                  <input
+                    id="nombre"
+                    name="nombre"
+                    required
+                    maxLength={MAX.nombre}
+                    placeholder="Tu nombre"
+                    className={fieldClass}
+                  />
                 </div>
                 <div className="min-w-0">
                   <label className={labelClass} htmlFor="email">
@@ -250,6 +298,7 @@ export function Contact() {
                     name="email"
                     type="email"
                     required
+                    maxLength={MAX.email}
                     placeholder="tu@email.com"
                     className={fieldClass}
                   />
@@ -258,13 +307,24 @@ export function Contact() {
                   <label className={labelClass} htmlFor="empresa">
                     Empresa
                   </label>
-                  <input id="empresa" name="empresa" placeholder="Opcional" className={fieldClass} />
+                  <input
+                    id="empresa"
+                    name="empresa"
+                    maxLength={MAX.empresa}
+                    placeholder="Opcional"
+                    className={fieldClass}
+                  />
                 </div>
                 <div className="min-w-0">
                   <label className={labelClass} htmlFor="tipo">
                     Tipo de proyecto
                   </label>
-                  <select id="tipo" name="tipo" className={fieldClass} defaultValue={projectTypes[0]}>
+                  <select
+                    id="tipo"
+                    name="tipo"
+                    className={fieldClass}
+                    defaultValue={projectTypes[0]}
+                  >
                     {projectTypes.map((t) => (
                       <option key={t} value={t} className="bg-surface">
                         {t}
@@ -298,9 +358,19 @@ export function Contact() {
                     name="mensaje"
                     rows={5}
                     required
+                    minLength={10}
+                    maxLength={MAX.mensaje}
+                    onChange={(e) => setMsgLen(e.target.value.length)}
                     placeholder="Contanos qué querés construir…"
                     className={`${fieldClass} resize-y`}
                   />
+                  <p
+                    className={`mt-1 text-right font-mono text-[10px] ${
+                      msgLen >= MAX.mensaje ? "text-red-400" : "text-muted-foreground"
+                    }`}
+                  >
+                    {msgLen}/{MAX.mensaje}
+                  </p>
                 </div>
               </div>
 
@@ -309,7 +379,11 @@ export function Contact() {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-xs text-muted-foreground">
-                      Verificación: ¿Cuánto es <strong className="text-[#00FF66]">{mathProblem.n1} × {mathProblem.n2}</strong>?
+                      Verificación: ¿Cuánto es{" "}
+                      <strong className="text-[#00FF66]">
+                        {mathProblem.n1} × {mathProblem.n2}
+                      </strong>
+                      ?
                     </span>
                     <input
                       type="number"

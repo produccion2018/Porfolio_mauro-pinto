@@ -30,11 +30,7 @@ export function Footer() {
           <div className="flex min-w-0 flex-col items-center sm:items-start">
             <div className="flex min-w-0 items-center gap-2.5">
               <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#00FF66]/30 bg-black overflow-hidden">
-                <img
-                  src={logoImg}
-                  alt="Nodo Tech"
-                  className="size-full object-cover"
-                />
+                <img src={logoImg} alt="Nodo Tech" className="size-full object-cover" />
               </span>
               <span className="truncate font-mono text-base font-bold text-[#00FF66] drop-shadow-[0_0_10px_rgba(0,255,102,0.5)]">
                 Nodo Tech
@@ -85,9 +81,12 @@ export function Footer() {
             <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#00FF66]">
               Contacto
             </h3>
-            <p className="mt-4 break-words text-sm font-mono text-[#00FF66]">
-              nodotech.web@gmail.com
-            </p>
+            <a
+              href="mailto:nodotech23@gmail.com"
+              className="mt-4 break-words text-sm font-mono text-[#00FF66] transition-opacity hover:opacity-80"
+            >
+              nodotech23@gmail.com
+            </a>
             <p className="mt-1 text-sm text-zinc-400">Buenos Aires, Argentina</p>
             <ul className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
               {socials.map((s) => (
