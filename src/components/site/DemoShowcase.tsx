@@ -1,9 +1,10 @@
 import { ArrowUpRight } from "lucide-react";
-import { MockDashboard, BrowserFrame } from "./MockDashboard";
+import { BrowserFrame } from "./MockDashboard";
+import demoCloudEsther from "@/assets/demo-cloud-esther.webp";
 import { Reveal } from "./Reveal";
 
 /** Cambiá esta constante por la URL real cuando el demo esté publicado. */
-const FEATURED_DEMO_URL: string | null = null;
+const FEATURED_DEMO_URL: string | null = "https://cloud-esther-demo.vercel.app";
 
 export function DemoShowcase() {
   return (
@@ -49,9 +50,16 @@ export function DemoShowcase() {
           </Reveal>
 
           <Reveal delay={150} className="min-w-0">
-            <BrowserFrame url="demo.tuproducto.app/dashboard" className="animate-float-slow">
-              <MockDashboard />
-            </BrowserFrame>
+            <a href={FEATURED_DEMO_URL ?? "#proyectos"} target="_blank" rel="noreferrer" className="group block">
+              <BrowserFrame url="cloud-esther-demo.vercel.app" className="animate-float-slow">
+                <img
+                  src={demoCloudEsther}
+                  alt="Cloud Esther — sistema para clínicas odontológicas"
+                  loading="lazy"
+                  className="w-full transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              </BrowserFrame>
+            </a>
           </Reveal>
         </div>
       </div>

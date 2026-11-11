@@ -1,4 +1,5 @@
 import demoAgenda from "@/assets/demo-agenda.webp";
+import demoCloudEsther from "@/assets/demo-cloud-esther.webp";
 import demoDataflow from "@/assets/demo-dataflow.webp";
 import demoPostres from "@/assets/demo-postres.webp";
 import demoSmartmarket from "@/assets/demo-smartmarket.webp";
@@ -42,15 +43,16 @@ export type FilterCategory = (typeof projectCategories)[number];
 export const projects: Project[] = [
   {
     id: "cloud-esther",
+    image: demoCloudEsther,
     title: "Cloud Esther — Sistema para clínicas odontológicas",
     description:
       "Sistema de gestión para consultorios: historia clínica, turnos, presupuestos y facturación por paciente, con panel de acciones rápidas para el equipo.",
     category: "SaaS",
     technologies: ["React", "TanStack Router", "Radix UI", "Node.js"],
-    demoUrl: null,
-    projectUrl: null,
+    demoUrl: "https://cloud-esther-demo.vercel.app",
+    projectUrl: "https://cloud-esther-demo.vercel.app",
     repoUrl: null,
-    placeholder: true,
+    placeholder: false,
     hue: 195,
   },
   {
